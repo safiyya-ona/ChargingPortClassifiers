@@ -5,7 +5,7 @@ import torch.optim as optim
 from torch.utils.data import DataLoader
 
 from classifier import Net
-from dataset import ConnectorsTraining, ConnectorsTesting
+from dataset import ConnectorsTraining
 
 # Hyperparameters
 LEARNING_RATE = 0.001
@@ -43,7 +43,6 @@ def main():
     training_loader: DataLoader = DataLoader(ConnectorsTraining(
         "training.csv"), batch_size=BATCH_SIZE, shuffle=True, pin_memory=True, num_workers=1)
 
-    running_loss = 0.0
     for epoch in range(NUM_EPOCHS):
         train(training_loader, model, optimizer, loss_fn)
 
