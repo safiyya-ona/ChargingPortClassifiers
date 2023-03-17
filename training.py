@@ -1,4 +1,5 @@
 from tqdm import tqdm
+import logging
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -8,12 +9,10 @@ from classifier import Net
 from dataset import ConnectorsTraining
 
 # Hyperparameters
-LEARNING_RATE = 0.001
+LEARNING_RATE = 0.0001
 BATCH_SIZE = 1
-NUM_EPOCHS = 1000
+NUM_EPOCHS = 50
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-IMAGE_SIZE = 512
-IMAGE_WIDTH = 512
 PIN_MEMORY = True
 
 
@@ -33,6 +32,7 @@ def train(data_loader, model, optimizer, loss_fn):
 
         # updates progress bar in command line
         loop.set_postfix(loss=loss.item())
+    return loss.item()
 
 
 def main():
@@ -42,11 +42,12 @@ def main():
 
     training_loader: DataLoader = DataLoader(ConnectorsTraining(
         "training.csv"), batch_size=BATCH_SIZE, shuffle=True, pin_memory=True, num_workers=1)
-
+    logging.basicConfig(
+        filename='no_transformations_loss.log', level=logging.INFO)
     for epoch in range(NUM_EPOCHS):
-        train(training_loader, model, optimizer, loss_fn)
-
-    torch.save(model.state_dict(), "classifier1.pth")
+        loss = train(training_loader, model, optimizer, loss_fn)
+        logging.info("Epoch: " + str(epoch + 1) + " Loss: " + str(loss))
+    torch.save(model.state_dict(), "classifier.pth")
 
 
 if __name__ == "__main__":

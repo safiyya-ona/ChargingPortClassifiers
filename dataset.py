@@ -9,8 +9,8 @@ from PIL import Image
 SIZE = [32, 32]
 
 
-def uniform_image_size(image: torch.Tensor):
-    image = resize(image, SIZE)
+def uniform_image_size(image: torch.Tensor, size=SIZE):
+    image = resize(image, size)
     return image
 
 
