@@ -23,7 +23,7 @@ def target_transform(label):
 
 class ConnectorsTraining(Dataset):
     def __init__(self, annotations_file, img_dir="training", transform=uniform_image_size, target_transform=target_transform):
-        self.img_labels = pd.read_csv(annotations_file)
+        self.img_labels = pd.read_csv(annotations_file, header=None)
         self.img_dir = img_dir
         self.transform = transform
         self.target_transform = target_transform
@@ -45,7 +45,7 @@ class ConnectorsTraining(Dataset):
 
 class ConnectorsTesting(Dataset):
     def __init__(self, annotations_file, img_dir="testing", transform=uniform_image_size, target_transform=target_transform):
-        self.img_labels = pd.read_csv(annotations_file)
+        self.img_labels = pd.read_csv(annotations_file, header=None)
         self.img_dir = img_dir
         self.transform = transform
         self.target_transform = target_transform
@@ -68,5 +68,5 @@ class ConnectorsTesting(Dataset):
 if __name__ == "__main__":
     training = ConnectorsTraining("training.csv")
     testing = ConnectorsTesting("testing.csv")
-    for i in range(len(testing)):
-        testing[i][0].shape
+    assert len(training) == 120
+    assert len(testing) == 32

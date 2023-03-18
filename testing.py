@@ -20,7 +20,7 @@ def validate(testing_loader, model, device=DEVICE):
     correct = 0
     total = 0
     with torch.no_grad():
-        for i, data in enumerate(tqdm(testing_loader, 0)):
+        for i, data in enumerate(tqdm(testing_loader)):
             image, label = data
             label = label.to(device)
             image = image.to(device)
@@ -29,13 +29,14 @@ def validate(testing_loader, model, device=DEVICE):
             _, predicted = torch.max(output.data, 1)
             total += label.size(0)
             correct += (predicted == label).sum().item()
-    print(total, correct, 100 * correct / total, "correct")
+    print(
+        f"Accuracy of the network on the {total} test images: {100 * correct / total} %")
 
 
 if __name__ == "__main__":
     print("Testing Classifier without transformations")
     network = Net()
-    network.load_state_dict(torch.load("classifier1.pth"))
+    network.load_state_dict(torch.load("classifier.pth"))
     network.to(DEVICE)
     testing_loader = DataLoader(ConnectorsTesting("testing.csv"))
     validate(testing_loader, network)
